@@ -56,7 +56,7 @@ const login = () => {
         }}
         >
         </TextInput>
-        <TouchableOpacity style={{backgroundColor : '#ffffff' , 
+        <TouchableOpacity style={{ 
         width:120 , 
         height:50,
         borderRadius:10,
