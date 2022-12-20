@@ -2,7 +2,11 @@ import { StyleSheet, Text, View , Image , TextInput , TouchableOpacity} from 're
 import React from 'react'
 import LinearGradient from 'react-native-linear-gradient';
 
-const login = () => {
+
+const Login = ({ navigation }) => {
+  const Alert = () => {
+    navigation.navigate('Add')
+  }
   return (
       <LinearGradient
         colors={[ '#495A5C', '#31363A' , '#000000']}
@@ -10,7 +14,7 @@ const login = () => {
       >
         <Image 
         source = {require('./img/Logo.png')}
-        style = {{width:220 , height : 250}} 
+        style = {{width:220 , height : 250 , marginTop : 70}} 
         />
         <Text
         style = {{fontSize:65 , color:'#ffffff', fontWeight:'500' ,}}
@@ -56,7 +60,9 @@ const login = () => {
         }}
         >
         </TextInput>
-        <TouchableOpacity style={{ 
+        <TouchableOpacity 
+        onPress={Alert}
+        style={{ 
         width:120 , 
         height:50,
         borderRadius:10,
@@ -74,7 +80,7 @@ const login = () => {
   )
 }
 
-export default login
+export default Login
 
 const styles = StyleSheet.create({
     linearGradient: {
