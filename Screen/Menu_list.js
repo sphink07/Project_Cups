@@ -14,8 +14,17 @@ const Menu_list = () => {
 
   const renderlist = ({item}) => (
     <View style={{flexDirection: 'row'}}>
-      <Text style={{marginEnd: 10}}>{item.Name}</Text>
-      <Text>{item.Price}</Text>
+      <Text style={{
+        marginEnd: 10,
+        fontSize: 40,
+        color: 'white',
+        fontWeight: '700',
+      }}>{item.Name}</Text>
+      <Text style={{
+        fontSize: 40,
+        color: 'white',
+        fontWeight: '700',
+      }}>{item.Price}</Text>
     </View>
   );
 
@@ -30,7 +39,7 @@ const Menu_list = () => {
   }, []);
 
   return (
-    <ScrollView>
+    <ScrollView nestedScrollEnabled={true} style={{ width: "100%" }}>
       <LinearGradient
         colors={['#495A5C', '#31363A', '#000000']}
         style={styles.linearGradient}>
@@ -42,9 +51,10 @@ const Menu_list = () => {
             marginTop: 30,
             borderRadius: 10,
           }}>
-          <ScrollView>
+          
             <View
               style={{
+                padding:10,
                 backgroundColor: 'gray',
                 height: 680,
                 width: '93%',
@@ -53,9 +63,11 @@ const Menu_list = () => {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
+            <ScrollView nestedScrollEnabled={true} style={{ width: "100%" }}>
               <FlatList data={Dataformapi} renderItem={renderlist}></FlatList>
+            </ScrollView>
             </View>
-          </ScrollView>
+          
         </View>
         <View style={{flexDirection: 'row', marginTop: 40, marginBottom: 50}}>
           <TouchableOpacity
