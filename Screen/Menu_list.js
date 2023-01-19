@@ -5,41 +5,73 @@ import {
   ScrollView,
   TouchableOpacity,
   FlatList,
+  Image,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect ,} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
 
-const Menu_list = () => {
-
+const Menu_list = ({navigation}) => {
+  const GotoAdd = () => {
+    navigation.navigate('Add');
+  };
   const renderlist = ({item}) => (
-    <View style={{flexDirection: 'row'}}>
+    <View style={{flexDirection: 'row' ,}}>
       <Text style={{
+        flex: 0.5,
         marginEnd: 10,
-        fontSize: 40,
+        marginBottom : 20,
+        fontSize: 25,
         color: 'white',
         fontWeight: '700',
       }}>{item.Name}</Text>
       <Text style={{
-        fontSize: 40,
-        color: 'white',
+        flex:0.4,
+        fontSize: 25,
+        color: 'yellow',
         fontWeight: '700',
       }}>{item.Price}</Text>
+      <TouchableOpacity
+      style={{flex:0.1 , alignItems:"center" , marginEnd:10}}
+      >
+      <Image
+        source={require('./img/crayon.png')}
+        style={{width: 25, height: 30}}
+      />
+      </TouchableOpacity>
+      <TouchableOpacity
+      style={{flex:0.1 , alignItems:"center"}}
+      >
+      <Image
+        source={require('./img/delete.png')}
+        style={{width: 25, height: 30}}
+      />
+      </TouchableOpacity>
     </View>
   );
 
+  
+
   const [Dataformapi, setDataformapi] = useState([]);
-  useEffect(() => {
+
+  const APIreq = () => {
     let url =
-      'https://script.google.com/macros/s/AKfycbzig08EL0EQ3dUsGsWoe5Rqmw5FdWicvJHxyRhwWk9pyytV9xCGYHVxGFNwyJ_Rgriw/exec?action=GetProduct';
-    axios
-      .post(url , '')
-      .then(res => setDataformapi(res.data))
-      .catch(err => console.log(err));
-  }, []);
+    'https://script.google.com/macros/s/AKfycbzig08EL0EQ3dUsGsWoe5Rqmw5FdWicvJHxyRhwWk9pyytV9xCGYHVxGFNwyJ_Rgriw/exec?action=GetProduct';
+  axios
+    .post(url , '')
+    .then(res => setDataformapi(res.data))
+    .catch(err => console.log(err));
+  }
+
+  useEffect(() => {
+     APIreq();
+  }, [Dataformapi]);
+
+
+
 
   return (
-    <ScrollView nestedScrollEnabled={true} style={{ width: "100%" }}>
+    <ScrollView nestedScrollEnabled={ true } style={{ width: "100%" }}>
       <LinearGradient
         colors={['#495A5C', '#31363A', '#000000']}
         style={styles.linearGradient}>
@@ -54,7 +86,7 @@ const Menu_list = () => {
           
             <View
               style={{
-                padding:10,
+                padding:15,
                 backgroundColor: 'gray',
                 height: 680,
                 width: '93%',
@@ -64,7 +96,12 @@ const Menu_list = () => {
                 alignItems: 'center',
               }}>
             <ScrollView nestedScrollEnabled={true} style={{ width: "100%" }}>
-              <FlatList data={Dataformapi} renderItem={renderlist}></FlatList>
+              <FlatList 
+              data={Dataformapi} 
+              renderItem={renderlist}
+              extraData={Dataformapi}
+              >
+              </FlatList>
             </ScrollView>
             </View>
           
@@ -89,6 +126,7 @@ const Menu_list = () => {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
+            onPress={GotoAdd}
             style={{
               backgroundColor: '#3fad00',
               width: 120,

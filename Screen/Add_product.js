@@ -6,32 +6,59 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
 
-const Add_product = () => {
+const Add_product = ({navigation}) => {
+  const GotoMenu = () => {
+    navigation.navigate('Menu_list');
+  };
   const [Name, setName] = useState('');
   const [Price, setPrice] = useState('');
-  const Submit = () => {
-    let url =
-      'https://script.google.com/macros/s/AKfycbzig08EL0EQ3dUsGsWoe5Rqmw5FdWicvJHxyRhwWk9pyytV9xCGYHVxGFNwyJ_Rgriw/exec?action=addUser';
-    const data = {Name: `${Name}`, Price: `${Price}`};
-    axios
-      .post(url, JSON.stringify(data))
-      .then(res => console.log(res.data))
-      .catch(err => console.log(err));
+  const [List, setList] = useState([]);
+
+  const Submit = async () => {
+    if(Name == '' || Price == ''){
+      Alert.alert("Error","incomplete information")
+    } else {
+      let count = List.length - 1
+      let result = parseInt(List[ count ].Id) + 1
+      let url =
+        'https://script.google.com/macros/s/AKfycbzig08EL0EQ3dUsGsWoe5Rqmw5FdWicvJHxyRhwWk9pyytV9xCGYHVxGFNwyJ_Rgriw/exec?action=addUser';
+      const data = {Id: `${result}`, Name: `${Name}`, Price: `${Price}`};
+      await axios
+        .post(url, JSON.stringify(data))
+        .then(res => console.log(res.data))
+        .then(
+          setTimeout(() => {
+            GotoMenu();
+          }, 1000),
+          alert("seccess")
+        )
+        .catch(err => console.log(err));
+    }
   };
+
+  useEffect(() => {
+    let url =
+      'https://script.google.com/macros/s/AKfycbzig08EL0EQ3dUsGsWoe5Rqmw5FdWicvJHxyRhwWk9pyytV9xCGYHVxGFNwyJ_Rgriw/exec?action=GetProduct';
+    axios
+      .post(url, '')
+      .then(res => setList(res.data))
+      .catch(err => console.log(err));
+  }, []);
 
   return (
     <ScrollView>
-    <LinearGradient
-      colors={['#495A5C', '#31363A', '#000000']}
-      style={styles.linearGradient}>
+      <LinearGradient
+        colors={['#495A5C', '#31363A', '#000000']}
+        style={styles.linearGradient}>
         <Image
           source={require('./img/add.png')}
-          style={{width: 200, height: 200, marginTop: 100 }}></Image>
+          style={{width: 200, height: 200, marginTop: 100}}></Image>
         <Text
           style={{
             marginTop: 100,
@@ -63,8 +90,9 @@ const Add_product = () => {
           placeholder={'Enter price'}
           keyboardType="numeric"
           onChangeText={text => setPrice(text)}></TextInput>
-        <View style={{flexDirection: 'row', marginTop: 100 , marginBottom : 90}}>
+        <View style={{flexDirection: 'row', marginTop: 100, marginBottom: 90}}>
           <TouchableOpacity
+            onPress={GotoMenu}
             style={{
               width: 120,
               height: 50,
@@ -103,7 +131,7 @@ const Add_product = () => {
             </Text>
           </TouchableOpacity>
         </View>
-    </LinearGradient>
+      </LinearGradient>
     </ScrollView>
   );
 };
@@ -118,7 +146,6 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     alignItems: 'center',
     justifyContent: 'center',
-   
   },
   TextInput: {
     fontSize: 20,
