@@ -6,72 +6,116 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
+
 } from 'react-native';
-import React, {useState, useEffect ,} from 'react';
+import React, {useState, useEffect , useCallback} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
 
 const Menu_list = ({navigation}) => {
   const GotoAdd = () => {
-    navigation.navigate('Add');
+    navigation.push('Add');
   };
-  const renderlist = ({item}) => (
-    <View style={{flexDirection: 'row' ,}}>
-      <Text style={{
-        flex: 0.5,
-        marginEnd: 10,
-        marginBottom : 20,
-        fontSize: 25,
-        color: 'white',
-        fontWeight: '700',
-      }}>{item.Name}</Text>
-      <Text style={{
-        flex:0.4,
-        fontSize: 25,
-        color: 'yellow',
-        fontWeight: '700',
-      }}>{item.Price}</Text>
-      <TouchableOpacity
-      style={{flex:0.1 , alignItems:"center" , marginEnd:10}}
-      >
-      <Image
-        source={require('./img/crayon.png')}
-        style={{width: 25, height: 30}}
-      />
-      </TouchableOpacity>
-      <TouchableOpacity
-      style={{flex:0.1 , alignItems:"center"}}
-      >
-      <Image
-        source={require('./img/delete.png')}
-        style={{width: 25, height: 30}}
-      />
-      </TouchableOpacity>
-    </View>
-  );
 
-  
+  // const ItemView = ({item}) => (
+  //   <View style={{flexDirection: 'row'}}>
+  //     <Text
+  //       style={{
+  //         flex: 0.5,
+  //         marginEnd: 10,
+  //         marginBottom: 20,
+  //         fontSize: 25,
+  //         color: 'white',
+  //         fontWeight: '700',
+  //       }}>
+  //       {item.Name}
+  //     </Text>
+  //     <Text
+  //       style={{
+  //         flex: 0.4,
+  //         fontSize: 25,
+  //         color: 'yellow',
+  //         fontWeight: '700',
+  //       }}>
+  //       {item.Price}
+  //     </Text>
+  //     <TouchableOpacity
+  //       onPress={() => DelInfor(item.Id)}
+  //       style={{flex: 0.1, alignItems: 'center'}}>
+  //       <Image
+  //         source={require('./img/delete.png')}
+  //         style={{width: 25, height: 30}}
+  //       />
+  //     </TouchableOpacity>
+  //   </View>
+  // );
+
+  // empty_list
+  // const EmptyComponent = () => <Text>No Information...</Text>;
+
+  //delete function
+  const DelInfor = async item => {
+    for (let i = 0; i < Dataformapi.length; i++) {
+      if (Dataformapi[i].Id == item) {
+        const Num = i;
+        sendApiToDelete(Num);
+        break;
+      }
+    }
+  };
+  //send delete req by Axios
+  const sendApiToDelete = async item => {
+    let JsonString = {Id: `${item}`};
+    let url =
+      'https://script.google.com/macros/s/AKfycbzig08EL0EQ3dUsGsWoe5Rqmw5FdWicvJHxyRhwWk9pyytV9xCGYHVxGFNwyJ_Rgriw/exec?action=DelProduct';
+    axios
+      .post(url, JsonString)
+      .then(res => console.log(res))
+      .catch(err => console.log(err));
+      await APIreq();
+  };
+  //header
+  // const ListHeader = ({item}) => {
+  //   return (
+  //     <View>
+  //       <Text
+  //         style={{
+  //           flex: 0.5,
+  //           marginEnd: 10,
+  //           marginBottom: 20,
+  //           fontSize: 25,
+  //           color: 'white',
+  //           fontWeight: '700',
+  //         }}>
+  //         Name
+  //       </Text>
+  //     </View>
+  //   );
+  // };
+
+  //use api and useEffect
 
   const [Dataformapi, setDataformapi] = useState([]);
+  const [Test, setTest] = useState([]);
 
-  const APIreq = () => {
+  const APIreq = async () => {
     let url =
-    'https://script.google.com/macros/s/AKfycbzig08EL0EQ3dUsGsWoe5Rqmw5FdWicvJHxyRhwWk9pyytV9xCGYHVxGFNwyJ_Rgriw/exec?action=GetProduct';
-  axios
-    .post(url , '')
-    .then(res => setDataformapi(res.data))
-    .catch(err => console.log(err));
-  }
+      'https://script.google.com/macros/s/AKfycbzig08EL0EQ3dUsGsWoe5Rqmw5FdWicvJHxyRhwWk9pyytV9xCGYHVxGFNwyJ_Rgriw/exec?action=GetProduct';
+    await axios
+      .post(url, '')
+      .then(res => setDataformapi(res.data))
+      .catch(err => console.log(err));
+      console.log("Stay Menu Page");
+  };
 
   useEffect(() => {
-     APIreq();
-  }, [Dataformapi]);
+     APIreq()
+  }, []);
 
 
-
-
+  //view
   return (
-    <ScrollView nestedScrollEnabled={ true } style={{ width: "100%" }}>
+    <ScrollView nestedScrollEnabled={true} style={{width: '100%'}}>
       <LinearGradient
         colors={['#495A5C', '#31363A', '#000000']}
         style={styles.linearGradient}>
@@ -83,28 +127,54 @@ const Menu_list = ({navigation}) => {
             marginTop: 30,
             borderRadius: 10,
           }}>
-          
-            <View
-              style={{
-                padding:15,
-                backgroundColor: 'gray',
-                height: 680,
-                width: '93%',
-                marginLeft: 12.5,
-                marginTop: 10,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-            <ScrollView nestedScrollEnabled={true} style={{ width: "100%" }}>
-              <FlatList 
-              data={Dataformapi} 
-              renderItem={renderlist}
-              extraData={Dataformapi}
-              >
-              </FlatList>
+          <View
+            style={{
+              padding: 15,
+              backgroundColor: 'gray',
+              height: 680,
+              width: '93%',
+              marginLeft: 12.5,
+              marginTop: 10,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <ScrollView nestedScrollEnabled={true} style={{width: '100%'}}>
+              {Dataformapi.map((item, index) => {
+                return (
+                  <View style={{flexDirection: 'row'}} key={index}>
+                    <Text
+                      style={{
+                        flex: 0.5,
+                        marginEnd: 10,
+                        marginBottom: 20,
+                        fontSize: 25,
+                        color: 'white',
+                        fontWeight: '700',
+                      }}>
+                      {item.Name}
+                    </Text>
+                    <Text
+                      style={{
+                        flex: 0.4,
+                        fontSize: 25,
+                        color: 'yellow',
+                        fontWeight: '700',
+                      }}>
+                      {item.Price}
+                    </Text>
+                    <TouchableOpacity
+                      onPress={() => DelInfor(item.Id)}
+                      style={{flex: 0.1, alignItems: 'center'}}>
+                      <Image
+                        source={require('./img/delete.png')}
+                        style={{width: 25, height: 30}}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                );
+              })}
             </ScrollView>
-            </View>
-          
+          </View>
         </View>
         <View style={{flexDirection: 'row', marginTop: 40, marginBottom: 50}}>
           <TouchableOpacity

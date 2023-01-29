@@ -12,9 +12,10 @@ import React, {useState, useEffect} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
 
+
 const Add_product = ({navigation}) => {
   const GotoMenu = () => {
-    navigation.navigate('Menu_list');
+    navigation.push('MenuList');
   };
   const [Name, setName] = useState('');
   const [Price, setPrice] = useState('');
@@ -29,26 +30,31 @@ const Add_product = ({navigation}) => {
       let url =
         'https://script.google.com/macros/s/AKfycbzig08EL0EQ3dUsGsWoe5Rqmw5FdWicvJHxyRhwWk9pyytV9xCGYHVxGFNwyJ_Rgriw/exec?action=addUser';
       const data = {Id: `${result}`, Name: `${Name}`, Price: `${Price}`};
-      await axios
+      await axios 
         .post(url, JSON.stringify(data))
         .then(res => console.log(res.data))
         .then(
           setTimeout(() => {
-            GotoMenu();
-          }, 1000),
+            GotoMenu()
+          }, 2500),
           alert("seccess")
         )
         .catch(err => console.log(err));
     }
   };
 
-  useEffect(() => {
+  const GetData = () =>{
     let url =
-      'https://script.google.com/macros/s/AKfycbzig08EL0EQ3dUsGsWoe5Rqmw5FdWicvJHxyRhwWk9pyytV9xCGYHVxGFNwyJ_Rgriw/exec?action=GetProduct';
-    axios
-      .post(url, '')
-      .then(res => setList(res.data))
-      .catch(err => console.log(err));
+    'https://script.google.com/macros/s/AKfycbzig08EL0EQ3dUsGsWoe5Rqmw5FdWicvJHxyRhwWk9pyytV9xCGYHVxGFNwyJ_Rgriw/exec?action=GetProduct';
+  axios
+    .post(url, '')
+    .then(res => setList(res.data))
+    .catch(err => console.log(err));
+     console.log(`Stay Add Page`)
+  }
+
+  useEffect(() => {
+    GetData()
   }, []);
 
   return (

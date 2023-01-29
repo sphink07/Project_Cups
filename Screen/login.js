@@ -12,7 +12,7 @@ import LinearGradient from 'react-native-linear-gradient';
 
 const Login = ({navigation}) => {
   const Alert = () => {
-    navigation.navigate('Add');
+    navigation.push('MenuList');
   };
   return (
     <ScrollView>
