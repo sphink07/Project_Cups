@@ -6,11 +6,13 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
+  Alert,
 
 } from 'react-native';
 import React, {useState, useEffect , useCallback} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
+import Loader from './Loader';
 
 const Menu_list = ({navigation}) => {
   const GotoAdd = () => {
@@ -52,9 +54,24 @@ const Menu_list = ({navigation}) => {
 
   // empty_list
   // const EmptyComponent = () => <Text>No Information...</Text>;
-
+  //Alert for Delete
+  const AlertForDelete = (item) => {
+    Alert.alert(
+      'Important..!',
+      'Are you sure you want to delete data?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {text: 'OK', onPress: () => DelInfor(item) },
+      ],
+      {cancelable: false},
+    );
+  }; 
   //delete function
-  const DelInfor = async item => {
+  const DelInfor = item => {
+    setLoading(true);
     for (let i = 0; i < Dataformapi.length; i++) {
       if (Dataformapi[i].Id == item) {
         const Num = i;
@@ -73,6 +90,7 @@ const Menu_list = ({navigation}) => {
       .then(res => console.log(res))
       .catch(err => console.log(err));
       await APIreq();
+      setLoading(false);
   };
   //header
   // const ListHeader = ({item}) => {
@@ -96,7 +114,7 @@ const Menu_list = ({navigation}) => {
   //use api and useEffect
 
   const [Dataformapi, setDataformapi] = useState([]);
-  const [Test, setTest] = useState([]);
+  const [Loading, setLoading] = useState(true);
 
   const APIreq = async () => {
     let url =
@@ -105,16 +123,17 @@ const Menu_list = ({navigation}) => {
       .post(url, '')
       .then(res => setDataformapi(res.data))
       .catch(err => console.log(err));
-      console.log("Stay Menu Page");
+      console.log("Stay Menu Page" + Dataformapi.length);
+      setLoading(false);
   };
 
   useEffect(() => {
      APIreq()
   }, []);
 
-
   //view
   return (
+    <>
     <ScrollView nestedScrollEnabled={true} style={{width: '100%'}}>
       <LinearGradient
         colors={['#495A5C', '#31363A', '#000000']}
@@ -139,7 +158,8 @@ const Menu_list = ({navigation}) => {
               alignItems: 'center',
             }}>
             <ScrollView nestedScrollEnabled={true} style={{width: '100%'}}>
-              {Dataformapi.map((item, index) => {
+              {Dataformapi.length !== 0 ? 
+              Dataformapi.map((item, index) => {
                 return (
                   <View style={{flexDirection: 'row'}} key={index}>
                     <Text
@@ -163,7 +183,7 @@ const Menu_list = ({navigation}) => {
                       {item.Price}
                     </Text>
                     <TouchableOpacity
-                      onPress={() => DelInfor(item.Id)}
+                      onPress={() => AlertForDelete(item.Id)}
                       style={{flex: 0.1, alignItems: 'center'}}>
                       <Image
                         source={require('./img/delete.png')}
@@ -172,7 +192,13 @@ const Menu_list = ({navigation}) => {
                     </TouchableOpacity>
                   </View>
                 );
-              })}
+              }) :
+              <View style={{justifyContent:'center' , alignItems:'center'}}>
+                <Text>
+                  No Information...
+                </Text>
+              </View>
+              }
             </ScrollView>
           </View>
         </View>
@@ -218,6 +244,8 @@ const Menu_list = ({navigation}) => {
         </View>
       </LinearGradient>
     </ScrollView>
+    {Loading ? <Loader/> : null}
+    </>
   );
 };
 

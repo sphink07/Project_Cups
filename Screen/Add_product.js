@@ -11,6 +11,7 @@ import {
 import React, {useState, useEffect} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
+import Loader from './Loader';
 
 
 const Add_product = ({navigation}) => {
@@ -20,11 +21,31 @@ const Add_product = ({navigation}) => {
   const [Name, setName] = useState('');
   const [Price, setPrice] = useState('');
   const [List, setList] = useState([]);
+  const [Loading, setLoading] = useState(false);
+
+//show alert
+const ShowAlert = () => {
+  if (Name == '' || Price == '') {
+    Alert.alert("Error","incomplete information")
+  } else {
+    Alert.alert(
+      'Important..!',
+      'Are you sure you want to save data?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {text: 'OK', onPress: Submit },
+      ],
+      {cancelable: false},
+    );
+  }
+}
 
   const Submit = async () => {
-    if(Name == '' || Price == ''){
-      Alert.alert("Error","incomplete information")
-    } else {
+
+      setLoading(true)
       let count = List.length - 1
       let result = parseInt(List[ count ].Id) + 1
       let url =
@@ -37,10 +58,9 @@ const Add_product = ({navigation}) => {
           setTimeout(() => {
             GotoMenu()
           }, 2500),
-          alert("seccess")
         )
         .catch(err => console.log(err));
-    }
+    
   };
 
   const GetData = () =>{
@@ -58,6 +78,7 @@ const Add_product = ({navigation}) => {
   }, []);
 
   return (
+    <>
     <ScrollView>
       <LinearGradient
         colors={['#495A5C', '#31363A', '#000000']}
@@ -117,7 +138,7 @@ const Add_product = ({navigation}) => {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={Submit}
+            onPress={ShowAlert}
             style={{
               marginStart: 40,
               width: 120,
@@ -139,6 +160,8 @@ const Add_product = ({navigation}) => {
         </View>
       </LinearGradient>
     </ScrollView>
+    {Loading ? <Loader/> : null}
+    </>
   );
 };
 
