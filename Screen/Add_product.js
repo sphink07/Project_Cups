@@ -44,24 +44,35 @@ const ShowAlert = () => {
 }
 
   const Submit = async () => {
-
-      setLoading(true)
-      let count = List.length - 1
-      let result = parseInt(List[ count ].Id) + 1
-      let url =
-        'https://script.google.com/macros/s/AKfycbzig08EL0EQ3dUsGsWoe5Rqmw5FdWicvJHxyRhwWk9pyytV9xCGYHVxGFNwyJ_Rgriw/exec?action=addUser';
-      const data = {Id: `${result}`, Name: `${Name}`, Price: `${Price}`};
-      await axios 
-        .post(url, JSON.stringify(data))
-        .then(res => console.log(res.data))
-        .then(
-          setTimeout(() => {
-            GotoMenu()
-          }, 2500),
-        )
-        .catch(err => console.log(err));
-    
+    await setLoading(true)
+    await check()
   };
+  
+  const check = () => {
+    if (List.length == 0) {
+      let deful = 1
+      sendApitosave(deful)
+    } else {
+      let count = List.length - 1 
+      let result = parseInt(List[ count ].Id) + 1
+      sendApitosave(result)
+    }
+  }
+
+  const sendApitosave = async (item) => {
+    let url =
+      'https://script.google.com/macros/s/AKfycbzig08EL0EQ3dUsGsWoe5Rqmw5FdWicvJHxyRhwWk9pyytV9xCGYHVxGFNwyJ_Rgriw/exec?action=addUser';
+    const data = {Id: `${item}`, Name: `${Name}`, Price: `${Price}`};
+    await axios 
+      .post(url, JSON.stringify(data))
+      .then(res => console.log(res.data))
+      .then(
+        setTimeout(() => {
+          GotoMenu()
+        }, 2500),
+      )
+      .catch(err => console.log(err));
+  } 
 
   const GetData = () =>{
     let url =
