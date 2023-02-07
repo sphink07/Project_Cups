@@ -17,40 +17,11 @@ const Menu_list = ({navigation}) => {
   const GotoAdd = () => {
     navigation.push('Add');
   };
+  const GotoMenuButton = () => {
+    navigation.push('MenuButton');
+  };
 
-  // const ItemView = ({item}) => (
-  //   <View style={{flexDirection: 'row'}}>
-  //     <Text
-  //       style={{
-  //         flex: 0.5,
-  //         marginEnd: 10,
-  //         marginBottom: 20,
-  //         fontSize: 25,
-  //         color: 'white',
-  //         fontWeight: '700',
-  //       }}>
-  //       {item.Name}
-  //     </Text>
-  //     <Text
-  //       style={{
-  //         flex: 0.4,
-  //         fontSize: 25,
-  //         color: 'yellow',
-  //         fontWeight: '700',
-  //       }}>
-  //       {item.Price}
-  //     </Text>
-  //     <TouchableOpacity
-  //       onPress={() => AlertForDelete(item.Id)}
-  //       style={{flex: 0.1, alignItems: 'center'}}>
-  //       <Image
-  //         source={require('./img/delete.png')}
-  //         style={{width: 25, height: 30}}
-  //       />
-  //     </TouchableOpacity>
-  //   </View>
-  // );
-  // check flatListRenderItem
+  // check flatListRenderItem  
   const CheckFlatListRenderItem = () => {
     if (Dataformapi.length > 0) {
       return Dataformapi.map((item, index) => {
@@ -58,13 +29,13 @@ const Menu_list = ({navigation}) => {
           <View
             style={{
               flexDirection: 'row',
-              backgroundColor:'black',
+              backgroundColor:'#202020',
               borderColor: 'black',
               borderRadius:10,
               borderWidth: 0.7,
               justifyContent:'center',
               alignItems:'center',
-              marginBottom:5,
+              marginBottom:10,
               padding:15
             }}
             key={index}>
@@ -84,10 +55,10 @@ const Menu_list = ({navigation}) => {
                 color: 'yellow',
                 fontWeight: '700',
               }}>
-              {item.Price}
+              {item.Price} ฿
             </Text>
             <TouchableOpacity
-              onPress={() => AlertForDelete(item.Id)}
+              onPress={() => AlertForDelete(item)}
               style={{flex: 0.1, alignItems: 'center'}}>
               <Image
                 source={require('./img/delete.png')}
@@ -105,14 +76,12 @@ const Menu_list = ({navigation}) => {
       );
     }
   };
-  // empty_list
-  // const EmptyComponent = () => <Text>No Information...</Text>;
 
   //Alert for Delete
   const AlertForDelete = item => {
     Alert.alert(
       'Important..!',
-      'Are you sure you want to delete data?',
+      `Are you sure you want to delete ${item.Name} ?`,
       [
         {
           text: 'Cancel',
@@ -123,20 +92,22 @@ const Menu_list = ({navigation}) => {
       {cancelable: false},
     );
   };
+
   //delete function
-  const DelInfor = item => {
+  const DelInfor = async item => {
     setLoading(true);
     for (let i = 0; i < Dataformapi.length; i++) {
-      if (Dataformapi[i].Id == item) {
+      if (Dataformapi[i].Id == item.Id) {
         const Num = i;
-        sendApiToDelete(Num);
+        await sendApiToDelete(Num);
         break;
       }
     }
   };
+
   //send delete req by Axios
   const sendApiToDelete = async item => {
-    let JsonString = {Id: `${item}`};
+    let JsonString = {Id : `${item}`};
     let url =
       'https://script.google.com/macros/s/AKfycbzig08EL0EQ3dUsGsWoe5Rqmw5FdWicvJHxyRhwWk9pyytV9xCGYHVxGFNwyJ_Rgriw/exec?action=DelProduct';
     await axios
@@ -146,27 +117,8 @@ const Menu_list = ({navigation}) => {
     await APIreq();
     await setLoading(false);
   };
-  //header
-  // const ListHeader = ({item}) => {
-  //   return (
-  //     <View>
-  //       <Text
-  //         style={{
-  //           flex: 0.5,
-  //           marginEnd: 10,
-  //           marginBottom: 20,
-  //           fontSize: 25,
-  //           color: 'white',
-  //           fontWeight: '700',
-  //         }}>
-  //         Name
-  //       </Text>
-  //     </View>
-  //   );
-  // };
 
   //use api and useEffect
-
   const [Dataformapi, setDataformapi] = useState([]);
   const [Loading, setLoading] = useState(true);
 
@@ -218,6 +170,7 @@ const Menu_list = ({navigation}) => {
           </View>
           <View style={{flexDirection: 'row', marginTop: 40, marginBottom: 50}}>
             <TouchableOpacity
+              onPress={GotoMenuButton}
               style={{
                 backgroundColor: '#9e9e9e',
                 width: 120,

@@ -11,7 +11,13 @@ import {
 import React from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 
-const MenuButton = ({}) => {
+const MenuButton = ({navigation}) => {
+  const GotoManagement = () => {
+    navigation.push('MenuList');
+  };
+  const GotoHomePage = () => {
+    navigation.push('HomePage');
+  };
   return (
     <SafeAreaView>
       <ScrollView>
@@ -33,6 +39,7 @@ const MenuButton = ({}) => {
               Cups
             </Text>
             <TouchableOpacity
+              onPress={GotoHomePage}
               style={{
                 marginBottom: 50,
                 width: 250,
@@ -72,6 +79,7 @@ const MenuButton = ({}) => {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
+              onPress={GotoManagement}
               style={{
                 marginBottom: 50,
                 width: 250,

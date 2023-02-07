@@ -82,3 +82,59 @@ Dataformapi.length === 0 ?
                       </TouchableOpacity>
                     </View>
                   );
+
+               
+  // const ItemView = ({item}) => (
+  //   <View style={{flexDirection: 'row'}}>
+  //     <Text
+  //       style={{
+  //         flex: 0.5,
+  //         marginEnd: 10,
+  //         marginBottom: 20,
+  //         fontSize: 25,
+  //         color: 'white',
+  //         fontWeight: '700',
+  //       }}>
+  //       {item.Name}
+  //     </Text>
+  //     <Text
+  //       style={{
+  //         flex: 0.4,
+  //         fontSize: 25,
+  //         color: 'yellow',
+  //         fontWeight: '700',
+  //       }}>
+  //       {item.Price}
+  //     </Text>
+  //     <TouchableOpacity
+  //       onPress={() => AlertForDelete(item.Id)}
+  //       style={{flex: 0.1, alignItems: 'center'}}>
+  //       <Image
+  //         source={require('./img/delete.png')}
+  //         style={{width: 25, height: 30}}
+  //       />
+  //     </TouchableOpacity>
+  //   </View>
+  // );
+ 
+
+    // empty_list
+  // const EmptyComponent = () => <Text>No Information...</Text>;
+    //header
+  // const ListHeader = ({item}) => {
+  //   return (
+  //     <View>
+  //       <Text
+  //         style={{
+  //           flex: 0.5,
+  //           marginEnd: 10,
+  //           marginBottom: 20,
+  //           fontSize: 25,
+  //           color: 'white',
+  //           fontWeight: '700',
+  //         }}>
+  //         Name
+  //       </Text>
+  //     </View>
+  //   );
+  // };
