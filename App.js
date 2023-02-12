@@ -6,6 +6,7 @@ import HomePage from './Screen/Home';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import MenuButton from './Screen/MenuButton';
+import SelectScreen from './Screen/SelectScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -13,6 +14,11 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+      <Stack.Screen
+          name="SelectScreen"
+          component={SelectScreen}
+          options={{headerShown: false}}
+        />
       <Stack.Screen
           name="MenuButton"
           component={MenuButton}
