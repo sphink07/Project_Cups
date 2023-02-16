@@ -18,6 +18,9 @@ const Home = ({navigation}) => {
   const GotoMenuBottom = () => {
     navigation.push('MenuButton');
   };
+  const GotoSelectProduct = () => {
+    navigation.push('SelectScreen');
+  };
   //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   //+++++++++++++++++++++++state-zone++++++++++++++++++++++++++++
   const [GetApi, setGetApi] = useState([]);
@@ -184,6 +187,7 @@ const Home = ({navigation}) => {
               </View>
             </View>
             <TouchableOpacity
+              onPress={GotoSelectProduct}
               style={{
                 backgroundColor: '#10c16b',
                 height: 45,
