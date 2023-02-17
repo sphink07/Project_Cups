@@ -30,6 +30,7 @@ const Home = ({navigation}) => {
   useEffect(() => {
     DaytoDay();
   }, []);
+  
   //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   //++++++++++++++++++++++++ formatDate +++++++++++++++++++++++++
   const FormatDateDay = item => {
@@ -52,9 +53,11 @@ const Home = ({navigation}) => {
   };
   //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   //++++++++++++++++++++++++ function mapList +++++++++++++++++++
-  const RenderItem = () => {
+  const RenderItem = (item) => {
     if (GetApi.length > 0) {
-      return GetApi.map((item, i) => {
+      let Revers = [];
+      Revers = GetApi.slice().reverse();
+      return Revers.map((item, i) => {
         return (
           <View
             style={{

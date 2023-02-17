@@ -16,8 +16,8 @@ import {SelectList} from 'react-native-dropdown-select-list';
 
 const Home = ({navigation}) => {
   //+++++++++++++++++++++++ push page +++++++++++++++++++++++++++
-  const GotoMenuBottom = () => {
-    navigation.push('MenuButton');
+  const GotoHome = () => {
+    navigation.push('HomePage');
   };
   //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   //+++++++++++++++++++++++state-zone++++++++++++++++++++++++++++
@@ -117,14 +117,52 @@ const Home = ({navigation}) => {
       .catch(err => console.log(err));
     await setLoading(false);
   };
-
-  //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  //++++++++++++++++++ Post Function ++++++++++++++++++++++++++++
+  const loadpost = async () => {
+    await setLoading(true);
+    await PostFunction(ShowList);
+  };
+  const PostFunction = async item => {
+    let url =
+      'https://script.google.com/macros/s/AKfycbzig08EL0EQ3dUsGsWoe5Rqmw5FdWicvJHxyRhwWk9pyytV9xCGYHVxGFNwyJ_Rgriw/exec?action=AddListToDay';
+    const data = item;
+    await axios
+      .post(url, JSON.stringify(data))
+      .then(res => console.log(res.data))
+      .then(setLoading(false))
+      .then(
+        setTimeout(() => {
+          GotoHome();
+        }, 1500),
+      )
+      .catch(err => console.log(err));
+  };
+  //+++++++++++++++++ POST to List day to Day++++++++++++++++++++
+  const PostApiToListDaytoDay = async () => {
+    if (ShowList.length > 0) {
+      Alert.alert(
+        'Important..!',
+        'Are you sure you want to save data?',
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          {text: 'OK', onPress: () => loadpost()},
+        ],
+        {cancelable: false},
+      );
+    } else {
+      Alert.alert('Error', 'Can not send data Or List is Empty!!');
+    }
+  };
   //++++++++++++++++++++ dropdown +++++++++++++++++++++++++++++++
 
   const DropDown = () => {
     return (
       <View
         style={{
+          marginTop: 20,
           width: '90%',
           alignItems: 'center',
           backgroundColor: 'gray',
@@ -215,20 +253,21 @@ const Home = ({navigation}) => {
   //++++++++++++++++++++++ resetList ++++++++++++++++++++++
   const resetList = () => {
     setShowList([]);
-    setTotalQTY(0);
-    setSumTotal(0);
   };
   //++++++++++++++++++++ SumQuantity&SumPrice +++++++++++++++++++++
-    const [TotalQTY, setTotalQTY] = useState(0);
-    const [SumTotal, setSumTotal] = useState(0);
-    const SetStatus = () => {
-      setTotalQTY(ShowList.reduce((sum, item) => sum + parseInt(item.Quantity), 0));
-      setSumTotal(ShowList.reduce((sum, item) => sum + parseInt(item.Price), 0));
-    } 
+  // const [TotalQTY, setTotalQTY] = useState(0);
+  // const [SumTotal, setSumTotal] = useState(0);
+  // const SetStatus = () => {
+  //   let Quana1 = 0;
+  //   let pri1 = 0;
+  //   Quana1 = ShowList.reduce((sum, item) => sum + parseInt(item.Quantity), 0);
+  //   pri1 = ShowList.reduce((sum, item) => sum + parseInt(item.Price), 0);
+  //   setTotalQTY(Quana1);
+  //   setSumTotal(pri1);
+  // };
   //++++++++++++++++++++++ Control function +++++++++++++++++++++
   const ControlFunction = async () => {
     await SaveToList();
-    await SetStatus();
   };
   //++++++++++++++++++++++ save to LIst +++++++++++++++++++++++++
   const [ValueDropDown, setValueDropDown] = useState('');
@@ -259,53 +298,15 @@ const Home = ({navigation}) => {
         <LinearGradient
           colors={['#495A5C', '#31363A', '#000000']}
           style={styles.linearGradient}>
-          <View style={{alignItems: 'center', marginBottom: 20}}>
-            <View style={{flexDirection: 'row'}}>
-              <View
-                style={{
-                  borderWidth: 2,
-                  height: 70,
-                  width: 160,
-                  marginTop: 30,
-                  marginRight: 10,
-                  borderRadius: 10,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderColor: '#10c16b',
-                  backgroundColor: '#353535',
-                }}>
-                <Text style={{fontSize: 20, color: 'white', fontWeight: '900'}}>
-                  Quantity :<Text style={{color: 'yellow'}}> {TotalQTY}</Text>
-                </Text>
-              </View>
-              <View
-                style={{
-                  borderWidth: 2,
-                  height: 70,
-                  width: 160,
-                  marginTop: 30,
-                  marginLeft: 10,
-                  borderRadius: 10,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderColor: '#10c16b',
-                  backgroundColor: '#353535',
-                }}>
-                <Text style={{fontSize: 20, color: 'white', fontWeight: '900'}}>
-                  Total :<Text style={{color: 'lime'}}> {SumTotal}</Text>
-                </Text>
-              </View>
-            </View>
-          </View>
           {DropDown()}
-          <View style={{height: 500, width: '90%'}}>
+          <View style={{height: 550, width: '90%'}}>
             <ScrollView nestedScrollEnabled={true} style={{width: '100%'}}>
               <View>{RenderItem()}</View>
             </ScrollView>
           </View>
           <View style={{flexDirection: 'row', height: 110, marginTop: 40}}>
             <TouchableOpacity
-              onPress={GotoMenuBottom}
+              onPress={GotoHome}
               style={{
                 backgroundColor: '#9e9e9e',
                 width: 120,
@@ -324,6 +325,7 @@ const Home = ({navigation}) => {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
+              onPress={() => PostApiToListDaytoDay()}
               style={{
                 backgroundColor: 'red',
                 width: 120,
