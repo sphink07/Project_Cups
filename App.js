@@ -7,6 +7,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import MenuButton from './Screen/MenuButton';
 import SelectScreen from './Screen/SelectScreen';
+import Total from './Screen/TotalSum';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,6 +20,12 @@ const App = () => {
           component={SelectScreen}
           options={{headerShown: false}}
         />
+      <Stack.Screen
+          name="Total"
+          component={Total}
+          options={{headerShown: false}}
+        />
+
       <Stack.Screen
           name="MenuButton"
           component={MenuButton}

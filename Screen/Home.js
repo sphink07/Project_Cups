@@ -148,16 +148,27 @@ const Home = ({navigation}) => {
       {cancelable: false},
     )
   }
-  //+++++++++++++++++++++++++++ Post Data +++++++++++++++++++++++
+  //+++++++++++++++++++++++++++ Post Date ++++++++++++++++++++++++
+  const PostDate = async () => {
+    let url =
+    'https://script.google.com/macros/s/AKfycbzig08EL0EQ3dUsGsWoe5Rqmw5FdWicvJHxyRhwWk9pyytV9xCGYHVxGFNwyJ_Rgriw/exec?action=AddListDate';
+    const data = {Total: `${SumTotal}`};
+    await axios 
+    .post(url, JSON.stringify(data))
+    .then(res => console.log(res.data))
+    .catch(err => console.log(err));
+  }
+  //+++++++++++++++++++++++++++ Post Total +++++++++++++++++++++++
   const PostFunction = async () => {
     let data = GetApi.slice().reverse();
     if (data.length == 0) {
       Alert.alert('Error', 'No information');
     } else {
       let url =
-        'https://script.google.com/macros/s/AKfycbzig08EL0EQ3dUsGsWoe5Rqmw5FdWicvJHxyRhwWk9pyytV9xCGYHVxGFNwyJ_Rgriw/exec?action=AddListToTal';
+    'https://script.google.com/macros/s/AKfycbzig08EL0EQ3dUsGsWoe5Rqmw5FdWicvJHxyRhwWk9pyytV9xCGYHVxGFNwyJ_Rgriw/exec?action=AddListToTal';
       const data = GetApi.slice().reverse();
       await setLoading(true);
+      await PostDate();
       await axios
         .post(url, JSON.stringify(data))
         .then(res => console.log(res.data))
@@ -168,6 +179,7 @@ const Home = ({navigation}) => {
           }, 1500),
         )
         .catch(err => console.log(err));
+      
     }
   };
   //++++++++++++++++++++++++++ Get API ++++++++++++++++++++++++++
