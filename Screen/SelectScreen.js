@@ -55,14 +55,16 @@ const Home = ({navigation}) => {
             key={i}>
             <Text
               style={{
+                flex:0.8,
                 fontSize: 25,
                 color: 'white',
                 fontWeight: '700',
               }}>
-              {i + 1}.{item.Name}
+              {i + 1}. {item.Name}
             </Text>
             <Text
               style={{
+                flex:0.2,
                 fontSize: 18,
                 color: 'yellow',
                 fontWeight: '700',
@@ -71,6 +73,7 @@ const Home = ({navigation}) => {
             </Text>
             <Text
               style={{
+                flex:0.2,
                 fontSize: 18,
                 color: 'lime',
                 fontWeight: '700',

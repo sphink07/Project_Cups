@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
   SafeAreaView,
+  Alert,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
@@ -30,7 +31,7 @@ const Home = ({navigation}) => {
   useEffect(() => {
     DaytoDay();
   }, []);
-  
+
   //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   //++++++++++++++++++++++++ formatDate +++++++++++++++++++++++++
   const FormatDateDay = item => {
@@ -53,7 +54,7 @@ const Home = ({navigation}) => {
   };
   //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   //++++++++++++++++++++++++ function mapList +++++++++++++++++++
-  const RenderItem = (item) => {
+  const RenderItem = item => {
     if (GetApi.length > 0) {
       let Revers = [];
       Revers = GetApi.slice().reverse();
@@ -75,39 +76,42 @@ const Home = ({navigation}) => {
             <View style={{flex: 0.6, marginLeft: 10}}>
               <Text
                 style={{
-                  fontSize: 25,
+                  fontSize: 22,
                   color: 'white',
                   fontWeight: '700',
                 }}>
-                {i + 1}.{item.Name}
+                {i + 1}. {item.Name}
               </Text>
-              <Text
-                style={{
-                  fontSize: 18,
-                  color: 'yellow',
-                  fontWeight: '700',
-                }}>
-                ▸ Qty : {item.Quantity}
-              </Text>
-              <Text
-                style={{
-                  fontSize: 18,
-                  color: 'lime',
-                  fontWeight: '700',
-                }}>
-                ▸ {item.Price} ฿
-              </Text>
+              <View style={{flexDirection:'row'}}>
+                <Text
+                  style={{
+                    fontSize: 18,
+                    color: 'yellow',
+                    fontWeight: '700',
+                    marginRight:10
+                  }}>
+                  {item.Quantity} ea
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 18,
+                    color: 'lime',
+                    fontWeight: '700',
+                  }}>
+                  {item.Price} ฿
+                </Text>
+              </View>
             </View>
             <Text
               style={{
-                flex: 0.7,
-                fontSize: 25,
+                flex: 0.5,
+                fontSize: 20,
                 color: 'white',
                 fontWeight: '700',
                 marginLeft: 15,
               }}>
               {FormatDateDay(item.date)}
-              <Text style={{color: 'cyan'}}> time : </Text>
+              <Text style={{color: 'cyan'}}> Time : </Text>
               <Text style={{color: 'lime'}}>{FormatDateTime(item.date)}</Text>
             </Text>
           </View>
@@ -119,15 +123,53 @@ const Home = ({navigation}) => {
           style={{
             alignItems: 'center',
             height: 600,
-            backgroundColor: 'black',
-            borderRadius:15,
+            backgroundColor: '#202020',
+            borderRadius: 15,
           }}>
-          <Text style={{fontSize: 25, color: 'white' , marginTop:20}}>List is empty...</Text>
+          <Text style={{fontSize: 25, color: 'white', marginTop: 20}}>
+            List is empty...
+          </Text>
         </View>
       );
     }
   };
-  //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  //+++++++++++++++++++++++++++ Click Save ++++++++++++++++++++++
+  const ClickSave = () => {
+    Alert.alert(
+      'Important..!',
+      'Are you sure you want to save data?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {text: 'OK', onPress: () => PostFunction() },
+      ],
+      {cancelable: false},
+    )
+  }
+  //+++++++++++++++++++++++++++ Post Data +++++++++++++++++++++++
+  const PostFunction = async () => {
+    let data = GetApi.slice().reverse();
+    if (data.length == 0) {
+      Alert.alert('Error', 'No information');
+    } else {
+      let url =
+        'https://script.google.com/macros/s/AKfycbzig08EL0EQ3dUsGsWoe5Rqmw5FdWicvJHxyRhwWk9pyytV9xCGYHVxGFNwyJ_Rgriw/exec?action=AddListToTal';
+      const data = GetApi.slice().reverse();
+      await setLoading(true);
+      await axios
+        .post(url, JSON.stringify(data))
+        .then(res => console.log(res.data))
+        .then(setLoading(false))
+        .then(
+          setTimeout(() => {
+            GotoMenuBottom();
+          }, 1500),
+        )
+        .catch(err => console.log(err));
+    }
+  };
   //++++++++++++++++++++++++++ Get API ++++++++++++++++++++++++++
   const DaytoDay = async () => {
     let url =
@@ -231,6 +273,7 @@ const Home = ({navigation}) => {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
+              onPress={ClickSave}
               style={{
                 backgroundColor: 'red',
                 width: 120,
