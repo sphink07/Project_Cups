@@ -15,23 +15,22 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-      <Stack.Screen
-          name="SelectScreen"
-          component={SelectScreen}
-          options={{headerShown: false}}
-        />
-      <Stack.Screen
+        <Stack.Screen
           name="Total"
           component={Total}
           options={{headerShown: false}}
         />
-
-      <Stack.Screen
+        <Stack.Screen
+          name="SelectScreen"
+          component={SelectScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
           name="MenuButton"
           component={MenuButton}
           options={{headerShown: false}}
         />
-        
+
         <Stack.Screen
           name="Login"
           component={Login}

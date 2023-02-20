@@ -18,6 +18,9 @@ const MenuButton = ({navigation}) => {
   const GotoHomePage = () => {
     navigation.push('HomePage');
   };
+  const GotoSum = () => {
+    navigation.push('Total');
+  };
   return (
     <SafeAreaView>
       <ScrollView>
@@ -60,6 +63,7 @@ const MenuButton = ({navigation}) => {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
+              onPress={GotoSum}
               style={{
                 marginBottom: 50,
                 width: 250,
