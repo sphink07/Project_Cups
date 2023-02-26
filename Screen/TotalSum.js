@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
@@ -25,6 +26,8 @@ const TotalSum = ({navigation}) => {
   // Getdate from api
   const [GetApiDate, setGetApiDate] = useState([]);
   const [Loading, setLoading] = useState(true);
+  const [Listdate, setListdate] = useState([]);
+  // Get Api
   const GetListDate = async () => {
     let url =
       'https://script.google.com/macros/s/AKfycbzig08EL0EQ3dUsGsWoe5Rqmw5FdWicvJHxyRhwWk9pyytV9xCGYHVxGFNwyJ_Rgriw/exec?action=GetListDate';
@@ -32,44 +35,162 @@ const TotalSum = ({navigation}) => {
       .post(url, '')
       .then(res => setGetApiDate(res.data))
       .catch(err => console.log(err));
+    await axios
+      .post(url, '')
+      .then(res => setListdate(res.data))
+      .catch(err => console.log(err));
     await setLoading(false);
   };
   // format date to year
-  const FormatDate = item => {
+  const FormatDateYear = item => {
     let date = new Date(item);
     let year = new Intl.DateTimeFormat('en', {year: 'numeric'}).format(date);
     return year;
+  };
+  // format date to ShowList
+  const FormatDateToShowList = item => {
+    let date = new Date(`${item}`);
+    let options = {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    };
+    let formattedDate = date.toLocaleDateString('th-TH', options);
+    return formattedDate;
   };
   // Loop
   const Loop = () => {
     let AList = [];
     if (GetApiDate.length > 0) {
       for (let i = 0; i < GetApiDate.length; i++) {
-        AList[i] = FormatDate(GetApiDate[i].Date) ;
+        AList[i] = FormatDateYear(GetApiDate[i].Date);
         // key: `${}`,
         // value: `${FormatDate(GetApiDate[i].Date)}`,
       }
     }
-    let formatDate = Array.from(new Set(AList))
+    let formatDate = Array.from(new Set(AList));
     return formatDate;
   };
   // data of dropdownlist
   const [Month, setMonth] = useState([
-    {value: 'January'},
-    {value: 'February'},
-    {value: 'March'},
-    {value: 'April'},
-    {value: 'May'},
-    {value: 'June'},
-    {value: 'July'},
-    {value: 'August'},
-    {value: 'September'},
-    {value: 'October'},
-    {value: 'November'},
-    {value: 'December'},
+    {value: 'January', key: 1},
+    {value: 'February', key: 2},
+    {value: 'March', key: 3},
+    {value: 'April', key: 4},
+    {value: 'May', key: 5},
+    {value: 'June', key: 6},
+    {value: 'July', key: 7},
+    {value: 'August', key: 8},
+    {value: 'September', key: 9},
+    {value: 'October', key: 10},
+    {value: 'November', key: 11},
+    {value: 'December', key: 12},
   ]);
   const [DateMonth, setDateMonth] = useState('');
   const [DateYear, setDateYear] = useState('');
+  // render item
+  const RenderItem = () => {
+    if (Listdate.length > 0) {
+      return Listdate.slice()
+        .reverse()
+        .map((item, i) => {
+          return (
+            <View
+              style={{
+                flexDirection: 'row',
+                backgroundColor: '#202020',
+                borderColor: 'black',
+                borderRadius: 10,
+                borderWidth: 0.7,
+                justifyContent: 'space-around',
+                alignItems: 'center',
+                marginBottom: 10,
+                padding: 15,
+              }}
+              key={i}>
+              <Text
+                style={{
+                  flex: 0.8,
+                  fontSize: 25,
+                  color: 'white',
+                  fontWeight: '700',
+                }}>
+                {FormatDateToShowList(item.Date)}
+              </Text>
+              <Text
+                style={{
+                  flex: 0.2,
+                  fontSize: 18,
+                  color: 'yellow',
+                  fontWeight: '700',
+                }}>
+                {item.Total}
+              </Text>
+            </View>
+          );
+        });
+    } else {
+      return (
+        <View
+          style={{
+            alignItems: 'center',
+            height: 600,
+            backgroundColor: '#202020',
+            borderRadius: 15,
+          }}>
+          <Text style={{fontSize: 25, color: 'white', marginTop: 20}}>
+            List is empty...
+          </Text>
+        </View>
+      );
+    }
+  };
+  // Sum total
+  const [TotalList, setTotalList] = useState(0);
+  const SumTotal = async (item) => {
+    let Num = 0;
+     for (let i = 0; i < item.length; i++) {
+        Num = item[i].Total + Num;
+     }
+    
+    await setTotalList(Num);
+  };
+  // Get Month
+  const GetMonth = item => {
+    let Num = 0;
+    let date = new Date(`${item}`);
+    Num = date.getMonth() + 1;
+    return Num;
+  };
+  // Get Year
+  const GetYear = item => {
+    let Num = '';
+    let date = new Date(`${item}`);
+    Num = date.getFullYear();
+    return Num;
+  };
+  // Check Year from list
+  const CheckYear = async () => {
+      let ListSelect = []
+      let filteredArray = []
+    if (DateMonth == '' || DateYear == '') {
+      Alert.alert('Error', 'Information not enough');
+    } else {
+      await setListdate([]);
+      for (let i = 0; i < GetApiDate.length; i++) {
+        if (
+          GetMonth(GetApiDate[i].Date) == DateMonth &&
+          GetYear(GetApiDate[i].Date) == DateYear
+        ) {
+          ListSelect[i] = {Date: `${GetApiDate[i].Date}`, Total:GetApiDate[i].Total}
+        }
+      }
+      filteredArray = ListSelect.filter(item => item !== undefined);
+      await setListdate(filteredArray);
+      await SumTotal(filteredArray)
+    }
+  };
+
   return (
     <SafeAreaView>
       <ScrollView>
@@ -87,6 +208,7 @@ const TotalSum = ({navigation}) => {
                 borderRadius: 15,
               }}>
               <SelectList
+                save="key"
                 placeholder="Please select month"
                 data={Month}
                 setSelected={setDateMonth}
@@ -107,7 +229,7 @@ const TotalSum = ({navigation}) => {
                   height: 50,
                   marginTop: 10,
                 }}
-                dropdownStyles={{backgroundColor: 'white', height:80}}
+                dropdownStyles={{backgroundColor: 'white', height: 90}}
                 inputStyles={{fontSize: 20, fontWeight: '800'}}
                 dropdownTextStyles={{fontSize: 15, fontWeight: '500'}}
               />
@@ -129,7 +251,7 @@ const TotalSum = ({navigation}) => {
                     fontWeight: '500',
                     color: 'white',
                   }}>
-                  Total :<Text style={{color: 'lime'}}>10000</Text>
+                  Total :<Text style={{color: 'lime'}}> {TotalList}</Text>
                 </Text>
               </View>
             </View>
@@ -139,20 +261,48 @@ const TotalSum = ({navigation}) => {
                 height: 500,
                 width: 350,
                 borderRadius: 10,
-              }}></View>
-            <TouchableOpacity
-              onPress={GotoMenuButton}
-              style={{
-                backgroundColor: 'white',
-                height: 50,
-                width: 130,
-                marginTop: 15,
-                borderRadius: 10,
-                alignItems: 'center',
-                justifyContent: 'center',
+                padding: 10,
               }}>
-              <Text style={{fontSize: 20, fontWeight: '600'}}>Back</Text>
-            </TouchableOpacity>
+              <ScrollView nestedScrollEnabled={true} style={{width: '100%'}}>
+                {RenderItem()}
+              </ScrollView>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginTop: 15,
+                width: 300,
+              }}>
+              <TouchableOpacity
+                onPress={GotoMenuButton}
+                style={{
+                  backgroundColor: '#909090',
+                  height: 50,
+                  width: 130,
+                  borderRadius: 10,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Text style={{fontSize: 20, fontWeight: '600', color: 'white'}}>
+                  Back
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={CheckYear}
+                style={{
+                  backgroundColor: '#10c16b',
+                  height: 50,
+                  width: 130,
+                  borderRadius: 10,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Text style={{fontSize: 20, fontWeight: '600', color: 'white'}}>
+                  Calculate
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </LinearGradient>
       </ScrollView>

@@ -6,14 +6,24 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  Alert
 } from 'react-native';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 
 const Login = ({navigation}) => {
-  const Alert = () => {
-    navigation.push('MenuList');
+  const GotoHomeButton = () => {
+    navigation.push('MenuButton');
   };
+  const [Username, setUsername] = useState('');
+  const [Password, setPassword] = useState('');
+  const CheckLogin = () => {
+    if (Username == 'Paicups' && Password == '58130') {
+      GotoHomeButton()
+    } else {
+      Alert.alert('Error' ,'Username or Password not correct')
+    }
+  }
   return (
     <ScrollView>
     <LinearGradient
@@ -37,6 +47,7 @@ const Login = ({navigation}) => {
         Username
       </Text>
       <TextInput
+        onChangeText={text => setUsername(text)}
         placeholder={'Enter username'}
         style={{
           backgroundColor: '#ffffff',
@@ -58,6 +69,7 @@ const Login = ({navigation}) => {
         Password
       </Text>
       <TextInput
+        onChangeText={text => setPassword(text)}
         placeholder={'Enter password'}
         secureTextEntry={true}
         style={{
@@ -70,7 +82,7 @@ const Login = ({navigation}) => {
           borderRadius: 10,
         }}></TextInput>
       <TouchableOpacity
-        onPress={Alert}
+        onPress={CheckLogin}
         style={{
           marginBottom : 102,
           width: 120,
