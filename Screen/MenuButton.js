@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
   SafeAreaView,
+  Alert,
 } from 'react-native';
 import React from 'react';
 import LinearGradient from 'react-native-linear-gradient';
@@ -22,7 +23,18 @@ const MenuButton = ({navigation}) => {
     navigation.push('Total');
   };
   const GotoLogin = () => {
-    navigation.push('Login');
+    Alert.alert(
+      'Important..!',
+      'Are you sure you want to logout?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {text: 'OK', onPress: () => navigation.push('Login')},
+      ],
+      {cancelable: false},
+    );
   };
   return (
     <SafeAreaView>
