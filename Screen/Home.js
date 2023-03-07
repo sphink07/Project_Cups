@@ -301,7 +301,7 @@ const Home = ({navigation}) => {
                   fontWeight: '700',
                   textAlign: 'center',
                 }}>
-                Save
+                Close-Shop
               </Text>
             </TouchableOpacity>
           </View>
